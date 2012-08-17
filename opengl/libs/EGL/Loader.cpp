@@ -322,6 +322,7 @@ void *Loader::load_driver(const char* kind, const char *tag,
             } else {
                 imgegl_path = "/system/lib/libIMGegl.so";
             }
+        void *imgegl = dlopen(imgegl_path, RTLD_LAZY);
             if (imgegl) {
                 unsigned int *PVRDefaultPBS =
                         (unsigned int *)dlsym(imgegl, "PVRDefaultPBS");
