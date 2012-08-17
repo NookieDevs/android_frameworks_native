@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <dlfcn.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include <cutils/log.h>
 #include <cutils/properties.h>
@@ -315,7 +316,12 @@ void *Loader::load_driver(const char* kind, const char *tag,
          */
         const char *cmdline = getProcessCmdline();
         if (strstr(cmdline, "systemui")) {
-            void *imgegl = dlopen("/system/lib/libIMGegl.so", RTLD_LAZY);
+            char *imgegl_path;
+            if (access("/vendor/lib/libIMGegl.so", F_OK) == 0) {
+                imgegl_path = "/vendor/lib/libIMGegl.so";
+            } else {
+                imgegl_path = "/system/lib/libIMGegl.so";
+            }
             if (imgegl) {
                 unsigned int *PVRDefaultPBS =
                         (unsigned int *)dlsym(imgegl, "PVRDefaultPBS");
